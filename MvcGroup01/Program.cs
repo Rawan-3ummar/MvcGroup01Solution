@@ -96,6 +96,7 @@ namespace MvcGroup01
                 .WithStaticAssets();
 
             app.Run();
+            //app.Run();
         }
     }
 }
