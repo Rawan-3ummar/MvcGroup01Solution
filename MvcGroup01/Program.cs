@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Routing.Constraints;
+using MvcGroup01.Middlewares;
+
 namespace MvcGroup01
 {
     public class Program
@@ -7,27 +10,89 @@ namespace MvcGroup01
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            //Service registiration
+            //Register mvc services [Controllers, views]
             builder.Services.AddControllersWithViews();
+            //Register services for API Controller [API]
+            //builder. Services. AddControllers;
+            //Register services for Full MVC Framework Controllers, Views, Razor pages, and more ]
+            //builder.Services.AddMvc();
+
+            //Register the core MVC services 
+            //builder.Services.AddMvcCore();
+
+            //Register services required for razor pages 
+            //builder. Services.AddRazorPages;
 
             var app = builder.Build();
-
+            //Middleware Pipeline
             // Configure the HTTP request pipeline.
+            //1] Exeption handling middleware
+
+            app.UseMiddleware<RequestTimingMiddleware>();
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
+                //Tell the browser to use HTTPS for future requests 
+                //2]HSTS-- >HTTP Strict Transport Security
+
                 app.UseHsts();
             }
-
+            //3]Redirect any incoming HTTP request to HTTPS
             app.UseHttpsRedirection();
+            //4] Serve public assests/ files [wwwroot]
+          //app.UseStaticFiles();
+            
+            //5] Match the incoming url with the available endpoints/actions
             app.UseRouting();
+            //6] Cross origin resource sharing
+            //app.UseCors();
 
+            //7] Identifies who the current user is [login] [JWT , COOKIES]
+            //app.UseAuthentication();
+
+            //8] Enable the app to read and write session data
+            //app.UseSession();
+
+            //Inline middleware [Custom middleware]
+            //app.Use(async (context, next) =>
+            //{
+            //    //Before next [Request]
+            //    Console.WriteLine($"Hello");
+            //    //next
+            //    await next(context);
+            //    //After next [Response]
+            //    Console.WriteLine($"Bye");
+            //});
+            //9] Authenticated user is allowed to access resource
             app.UseAuthorization();
-
             app.MapStaticAssets();
+            //            app.MapControllerRoute(
+            //    name: "shop",
+            //    pattern: "{controller}/{action}/{id}",
+            //    defaults: new
+            //    {
+            //        controller = "Products",
+            //        action = "TestRouting"
+            //    },
+            //    constraints: new
+            //    {
+            //        id = new IntRouteConstraint()
+            //    }
+            //);
+
+//            app.MapControllerRoute(
+//    name: "shop",
+//    pattern: "{controller=Products}/{action=TestRouting}/{id:int?}"
+//);
+
+
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Home}/{action=Index}/{id:int?}")
                 .WithStaticAssets();
 
             app.Run();

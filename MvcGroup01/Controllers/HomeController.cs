@@ -4,7 +4,8 @@ using MvcGroup01.Models;
 
 namespace MvcGroup01.Controllers
 {
-    //
+    //MVC Controller : Controller : ControllerBase
+    //API Controller : ControllerBase 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,6 +14,11 @@ namespace MvcGroup01.Controllers
         {
             _logger = logger;
         }
+        //Action
+        //BaseUrl/Home/Index
+        //BaseUrl/Home
+        //Master action
+        //Default method for action --> GET
 
         public IActionResult Index()
         {
